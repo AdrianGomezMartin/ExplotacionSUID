@@ -47,11 +47,11 @@ def lanza_metasploit():
     os.system(f"msfconsole -q -r {archivo_rc}")
 
 def configurar_archivo():
-    conf = pedir_dato(f"Desea modificar el archivo {c}  ? [S/n] ")
-    if len(conf) == 0 or conf[0].upper():
+    conf = pedir_dato(f"Desea modificar el archivo {c} antes de compilarlo ? [S/n] ")
+    if len(conf) == 0 or conf[0].upper() == "S":
         os.system(f"nano {c}")
-        informar(f"COMPILANDO {c} a SUID")
-        os.system(f"gcc {c} -o SUID")
+    informar(f"COMPILANDO {c} a SUID")
+    os.system(f"gcc {c} -o SUID")
 
 def main():
     interfaz = pedir_dato("INTRODUCE la interfaz conectada a internet")
